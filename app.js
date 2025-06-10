@@ -23,38 +23,6 @@ mongoose.connect(process.env.MONGO_URI, {
     }
 });
 
-<<<<<<< HEAD
-// Run below commands to run mongodb container
-// docker run -d   --name mongodb   -p 27017:27017   -e MONGO_INITDB_ROOT_USERNAME=admin   -e MONGO_INITDB_ROOT_PASSWORD=secret   mongo:6
-// docker exec -it mongodb mongosh -u admin -p secret
-// use solar_system
-// db.createUser({
-// user: "superuser",
-// pwd: "SuperPassword",
-// roles: [{ role: "readWrite", db: "solar_system" }]
-// })
-// Run below command to add planets details in mongodb
-// node seed.js
-// npm test
-// npm run coverage
-// npm start
-
-//mongoose.connect('mongodb://localhost:27017/superData', {
-//    user: 'superuser',
-//    pass: 'SuperPassword',
-//    useNewUrlParser: true,
-//    useUnifiedTopology: true
-//}, function(err) {
-//    if (err) {
-//        console.log("error!! " + err)
-//    } else {
-//      //  console.log("MongoDB Connection Successful")
-//    }
-//})
-
-
-=======
->>>>>>> 22e92a5ce35960531e9577fc648ec29aa453c538
 var Schema = mongoose.Schema;
 
 var dataSchema = new Schema({
