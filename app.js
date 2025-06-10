@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const OS = require('os');
@@ -11,7 +12,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 app.use(cors())
 
-mongoose.connect("mongodb://superuser:SuperPassword@localhost:27017/solar_system?authSource=solar_system", {
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, function(err) {
@@ -21,21 +22,6 @@ mongoose.connect("mongodb://superuser:SuperPassword@localhost:27017/solar_system
         console.log("MongoDB Connection Successful")
     }
 });
-
-
-//mongoose.connect('mongodb://localhost:27017/superData', {
-//    user: 'superuser',
-//    pass: 'SuperPassword',
-//    useNewUrlParser: true,
-//    useUnifiedTopology: true
-//}, function(err) {
-//    if (err) {
-//        console.log("error!! " + err)
-//    } else {
-//      //  console.log("MongoDB Connection Successful")
-//    }
-//})
-
 
 var Schema = mongoose.Schema;
 
