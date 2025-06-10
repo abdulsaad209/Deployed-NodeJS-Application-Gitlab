@@ -22,6 +22,20 @@ mongoose.connect("mongodb://superuser:SuperPassword@localhost:27017/solar_system
     }
 });
 
+// Run below commands to run mongodb container
+// docker run -d   --name mongodb   -p 27017:27017   -e MONGO_INITDB_ROOT_USERNAME=admin   -e MONGO_INITDB_ROOT_PASSWORD=secret   mongo:6
+// docker exec -it mongodb mongosh -u admin -p secret
+// use solar_system
+// db.createUser({
+// user: "superuser",
+// pwd: "SuperPassword",
+// roles: [{ role: "readWrite", db: "solar_system" }]
+// })
+// Run below command to add planets details in mongodb
+// node seed.js
+// npm test
+// npm run coverage
+// npm start
 
 //mongoose.connect('mongodb://localhost:27017/superData', {
 //    user: 'superuser',
