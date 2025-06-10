@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const OS = require('os');
@@ -11,7 +12,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 app.use(cors())
 
-mongoose.connect("mongodb://superuser:SuperPassword@localhost:27017/solar_system?authSource=solar_system", {
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, function(err) {
@@ -22,6 +23,7 @@ mongoose.connect("mongodb://superuser:SuperPassword@localhost:27017/solar_system
     }
 });
 
+<<<<<<< HEAD
 // Run below commands to run mongodb container
 // docker run -d   --name mongodb   -p 27017:27017   -e MONGO_INITDB_ROOT_USERNAME=admin   -e MONGO_INITDB_ROOT_PASSWORD=secret   mongo:6
 // docker exec -it mongodb mongosh -u admin -p secret
@@ -51,6 +53,8 @@ mongoose.connect("mongodb://superuser:SuperPassword@localhost:27017/solar_system
 //})
 
 
+=======
+>>>>>>> 22e92a5ce35960531e9577fc648ec29aa453c538
 var Schema = mongoose.Schema;
 
 var dataSchema = new Schema({
