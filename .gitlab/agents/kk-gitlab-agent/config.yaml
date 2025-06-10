@@ -1,9 +1,0 @@
-ci_access:
-  projects:
-    - id: demos-group/solar-system
-
-user_access:
-  access_as:
-    agent: {}
-  projects:
-    - id: demos-group/solar-system
