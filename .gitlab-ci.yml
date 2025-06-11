@@ -124,7 +124,7 @@ docker_test:
   script:
     - docker load -i image/solar-system-image:$IMAGE_VERSION.tar
     - docker run --name solar-system-app -d -p 3000:3000 $DOCKER_USER/solar_system:$IMAGE_VERSION
-    - export IP=docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-app
+    - export IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-app)
     - echo $IP
     - docker run alpine wget -q -O http://$IP:3000/live | grep live
     
