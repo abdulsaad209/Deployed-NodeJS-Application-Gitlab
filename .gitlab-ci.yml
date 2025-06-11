@@ -128,4 +128,22 @@ docker_test:
     - echo $IP
     - docker run alpine wget -q -O - http://$IP:3000/live | grep live
 
-    
+docker_push:
+  stage: containerization
+  needs:
+    - docker_build
+    - docker_test
+  tags:
+    - "linux_ubuntu_docker"
+  image: docker:28.2.2
+  services:
+  - name: docker:28.2.2-dind # Docker in Docker image
+    alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375 # To connect to the container inside container daemon running on non TLS port 2375
+    DOCKER_TLS_CERTDIR: ""  # Disable TLS to simplify communication 
+  
+  script:
+    - docker load -i image/solar-system-image:$IMAGE_VERSION.tar
+    - docker login --username=$DOCKER_USER --password=$DOCKER_PASSWORD
+    - docker push $DOCKER_USER/solar_system:$IMAGE_VERSION
