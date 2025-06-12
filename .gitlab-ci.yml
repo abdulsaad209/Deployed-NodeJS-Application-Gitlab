@@ -153,7 +153,7 @@ k8s_dev_deploy:
   tags:
     - linux_ubuntu_docker
   stage: dev_deploy
-  image: alpine:3.4
+  image: alpine:3.18
   dependencies: []
   before_script:
     - apk add --no-cache curl bash
@@ -163,7 +163,8 @@ k8s_dev_deploy:
     - mkdir -p /root/.kube
     - echo "$DEV_KUBE_CONFIGS" > /root/.kube/config
     - chmod 600 /root/.kube/config
-    - export KUBECONFIG=$DEV_KUBE_CONFIG
+    - export KUBECONFIG=/root/.kube/config
     - kubectl version -o yaml
     - kubectl get nodes
+
 
