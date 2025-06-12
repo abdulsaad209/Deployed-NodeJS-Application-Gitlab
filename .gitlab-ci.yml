@@ -8,6 +8,7 @@ workflow:
 stages:
   - test
   - containerization
+  - dev_deploy
 
 variables:
   DOCKER_USER: $DOCKER_USERNAME
@@ -147,3 +148,14 @@ docker_push:
     - docker load -i image/solar-system-image:$IMAGE_VERSION.tar
     - docker login --username=$DOCKER_USER --password=$DOCKER_PASSWORD
     - docker push $DOCKER_USER/solar_system:$IMAGE_VERSION
+
+k8s_dev_deploy:
+  stage: dev_deploy
+  image:
+    name: alpine:3.4
+  dependencies: []
+  script:
+    - export $DEV_KUBE_CONFIG
+    - kubectl version -o yaml
+    - kubectl get nodes
+
