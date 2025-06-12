@@ -149,22 +149,21 @@ stages:
 #     - docker login --username=$DOCKER_USER --password=$DOCKER_PASSWORD
 #     - docker push $DOCKER_USER/solar_system:$IMAGE_VERSION
 
-variables:
-  DEV_KUBE_CONFIGS: $DEV_KUBE_CONFIG
-
 k8s_dev_deploy:
   tags:
     - linux_ubuntu_docker
   stage: dev_deploy
-  image:
-    name: alpine:3.4
+  image: alpine:3.4
   dependencies: []
   before_script:
     - apk add --no-cache curl bash
-    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
     - install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
   script:
-    - export KUBECONFIG=$DEV_KUBE_CONFIGS
+    - mkdir -p /root/.kube
+    - echo "$DEV_KUBE_CONFIGS" > /root/.kube/config
+    - chmod 600 /root/.kube/config
+    - export KUBECONFIG=$DEV_KUBE_CONFIG
     - kubectl version -o yaml
     - kubectl get nodes
 
