@@ -160,7 +160,7 @@ k8s_dev_deploy:
     name: alpine:3.4
   dependencies: []
   script:
-    - export $DEV_KUBE_CONFIGS
+    - export KUBECONFIG=$DEV_KUBE_CONFIGS
     - kubectl version -o yaml
     - kubectl get nodes
 
