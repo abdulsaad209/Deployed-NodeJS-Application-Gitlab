@@ -160,7 +160,8 @@ k8s_dev_deploy:
     - chmod +x ./kubectl
     - mv ./kubectl /usr/bin/kubectl
   script:
-    - export KUBECONFIG=$DEV_KUBE_CONFIG
+    - echo "$DEV_KUBE_CONFIG" > kubeconfig.yaml
+    - export KUBECONFIG=$PWD/kubeconfig.yaml
     - kubectl version -o yaml
     - kubectl get nodes
 
