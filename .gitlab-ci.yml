@@ -161,7 +161,7 @@ k8s_dev_deploy:
     - chmod +x ./kubectl
     - mv ./kubectl /usr/bin/kubectl
     - kubectl version --client
-    - apt add --no-cache gettext
+    - apk add --no-cache gettext
     - envsubst -V
     
   script:
