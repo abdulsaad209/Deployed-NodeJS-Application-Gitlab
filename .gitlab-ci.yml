@@ -165,4 +165,3 @@ k8s_dev_deploy:
     - kubectl version -o yaml
     - kubectl get nodes
 
-
