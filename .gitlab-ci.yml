@@ -149,6 +149,9 @@ stages:
 #     - docker login --username=$DOCKER_USER --password=$DOCKER_PASSWORD
 #     - docker push $DOCKER_USER/solar_system:$IMAGE_VERSION
 
+variables:
+  DEV_KUBE_CONFIGS: $DEV_KUBE_CONFIG
+
 k8s_dev_deploy:
   tags:
     - linux_ubuntu_docker
@@ -157,7 +160,7 @@ k8s_dev_deploy:
     name: alpine:3.4
   dependencies: []
   script:
-    - export $DEV_KUBE_CONFIG
+    - export $DEV_KUBE_CONFIGS
     - kubectl version -o yaml
     - kubectl get nodes
 
