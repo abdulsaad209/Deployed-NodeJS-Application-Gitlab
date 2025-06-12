@@ -1,14 +1,14 @@
-# workflow:
-#   name: "Solar System NodeJS Pipeline"
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH =~ /^feature/
-#       when: always
-#     - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^feature/ && $CI_PIPELINE_SOURCE == "merge_request_event"
+workflow:
+  name: "Solar System NodeJS Pipeline"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH =~ /^feature/
+      when: always
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^feature/ && $CI_PIPELINE_SOURCE == "merge_request_event"
 
-# stages:
-#   - test
-#   - containerization
-#   - dev_deploy
+stages:
+  #- test
+  #- containerization
+  - dev_deploy
 
 # variables:
 #   DOCKER_USER: $DOCKER_USERNAME
