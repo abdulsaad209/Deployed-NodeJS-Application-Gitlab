@@ -159,9 +159,9 @@ k8s_dev_deploy:
     - wget https://storage.googleapis.com/kubernetes-release/release/$(wget -q -O - https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
     - chmod +x ./kubectl
     - mv ./kubectl /usr/bin/kubectl
+    - kubectl version --client
   script:
-    - echo "$DEV_KUBE_CONFIG" > kubeconfig.yaml
-    - export KUBECONFIG=$PWD/kubeconfig.yaml
+    - export KUBECONFIG="$DEV_KUBE_CONFIG"
     - kubectl version -o yaml
     - kubectl get nodes
 
