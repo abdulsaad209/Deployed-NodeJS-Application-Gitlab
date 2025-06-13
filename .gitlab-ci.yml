@@ -174,8 +174,7 @@ k8s_dev_deploy:
     - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --save-config --dry-run=client -o yaml | kubectl apply -f -
     - for i in kubernetes/development/*.yaml; do envsubst < $i | kubectl apply -f -; done
     - kubectl -n $NAMESPACE get all,secret,ing
-    - export "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
-    - echo $INGRESS_URL
+    - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
 
   artifacts:
     reports:
