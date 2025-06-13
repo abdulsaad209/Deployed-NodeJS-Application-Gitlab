@@ -7,9 +7,9 @@ workflow:
 
 stages:
   - Testing
-  # - Containerization
-  # - Dev_Deploy
-  # - Stage_Deploy # To test the k8s agent cluster
+  - Containerization
+  - Dev_Deploy
+  - Stage_Deploy # To test the k8s agent cluster
 
 variables:
   K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
@@ -24,11 +24,11 @@ unit_testing:
     stage: Testing
     image: node:18-alpine3.14
     services:
-    - name: $TEST_DB  # To run separate db container for testing purpose
+    - name: saadzahid/solarsystem-mongodb-test:05  # To run separate db container for testing purpose
       alias: mongo
       pull_policy: always
     variables:
-      MONGO_URI: $TEST_URI 
+      MONGO_URI: mongodb://test-user:test-user-1@mongo:27017/solar_system 
     before_script:
         - npm install # Installing required dependencies
     script:
