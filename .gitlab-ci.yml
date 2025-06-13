@@ -5,6 +5,7 @@ workflow:
       when: always
     - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^feature/ && $CI_PIPELINE_SOURCE == "merge_request_event"
 
+
 stages:
   # - test
   # - containerization
