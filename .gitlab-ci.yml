@@ -174,13 +174,27 @@ k8s_dev_deploy:
     - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --save-config --dry-run=client -o yaml | kubectl apply -f -
     - for i in kubernetes/development/*.yaml; do envsubst < $i | kubectl apply -f -; done
     - kubectl -n $NAMESPACE get all,secret,ing
-    - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
+    - export "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
     - echo $INGRESS_URL
-    - echo $K8S_IMAGE
-  # artifacts:
-  #   reports:
-  #     dotenv: app_ingress_url.env
-  # environment:
-  #   name: development
-  #   url: https://$INGRESS_URL
+
+  artifacts:
+    reports:
+      dotenv: app_ingress_url.env
+  environment:
+    name: development
+    url: https://$INGRESS_URL
+
+k8s_dev_integration_testing:
+  stage: dev_deploy
+  needs:
+    - k8s_dev_deploy
+  image: alpine:3.18
+  before_script:
+    - apk add --no-cache curl
+    - apk add --no-cache jq #jq is used to grep text specifically from json text
+  script:
+    - curl -s -k https://$INGRESS_URL/live | jq -r .status | grep -i live
+    - curl -s -k https://$INGRESS_URL/ready | jq -r .status | grep -i ready
+
+  
 
