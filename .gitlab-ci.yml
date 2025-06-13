@@ -10,12 +10,12 @@ stages:
   - containerization
   - dev_deploy
 
-# variables:
-#   #K8S_IMAGE: saadzahid/solar_system:219
-#   K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
-#   DOCKER_USER: $DOCKER_USERNAME
-#   IMAGE_VERSION: $CI_PIPELINE_ID
-  #MONGO_URI: mongodb://superuser:$PASSWORD@192.168.100.47:27017/solar_system
+variables:
+  #K8S_IMAGE: saadzahid/solar_system:219
+  K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
+  DOCKER_USER: $DOCKER_USERNAME
+  IMAGE_VERSION: $CI_PIPELINE_ID
+  MONGO_URI: $MAIN_MONGO_URI
 
 
 unit_testing:
