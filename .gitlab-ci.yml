@@ -7,149 +7,150 @@ workflow:
 
 
 stages:
-  - test
-  - containerization
+  #- test
+  #- containerization
   - dev_deploy
 
 variables:
-  K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
+  K8S_IMAGE: saadzahid/solar_system:219
+  #K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
   DOCKER_USER: $DOCKER_USERNAME
   IMAGE_VERSION: $CI_PIPELINE_ID
 # # #   MONGO_URI: mongodb://superuser:$PASSWORD@192.168.100.47:27017/solar_system
 
-unit_testing:
-    tags:
-      - "linux_ubuntu_docker"
-    stage: test
-    image: node:18-alpine3.14
-    services:
-    - name: saadzahid/solarsystem-mongodb-test:01  # To run separate db container for testing purpose
-      alias: mongo
-      pull_policy: always
-    variables:
-      MONGO_URI: mongodb://test-user:test-user-1@mongo:27017/solar_system
-    before_script:
-        - npm install # Installing required dependencies
-    script:
-        - npm test  # Testing the code 
-    cache:
-      policy: pull-push
-      when: on_success
-      paths:
-        - node_modules
-      key:
-        files:
-          - package-lock.json
-        prefix: node_modules
+# unit_testing:
+#     tags:
+#       - "linux_ubuntu_docker"
+#     stage: test
+#     image: node:18-alpine3.14
+#     services:
+#     - name: saadzahid/solarsystem-mongodb-test:01  # To run separate db container for testing purpose
+#       alias: mongo
+#       pull_policy: always
+#     variables:
+#       MONGO_URI: mongodb://test-user:test-user-1@mongo:27017/solar_system
+#     before_script:
+#         - npm install # Installing required dependencies
+#     script:
+#         - npm test  # Testing the code 
+#     cache:
+#       policy: pull-push
+#       when: on_success
+#       paths:
+#         - node_modules
+#       key:
+#         files:
+#           - package-lock.json
+#         prefix: node_modules
 
-    artifacts:
-      when: always  # Artifacts will store always (on_success and on_failure both)
-      expire_in: 3 days # Artifacts will delete automatically after mentioned time
-      name: "Moca-Test-Results"
-      paths:
-        - "test-results.xml"  # Filename where artifacts will be stored
-      reports:
-        junit: "test-results.xml" # Filename where artifacts junit test reports will store.
+#     artifacts:
+#       when: always  # Artifacts will store always (on_success and on_failure both)
+#       expire_in: 3 days # Artifacts will delete automatically after mentioned time
+#       name: "Moca-Test-Results"
+#       paths:
+#         - "test-results.xml"  # Filename where artifacts will be stored
+#       reports:
+#         junit: "test-results.xml" # Filename where artifacts junit test reports will store.
 
-code_coverage:
-    tags:
-      - "linux_ubuntu_docker"
-    stage: test
-    image: node:18-alpine3.14
-    services:
-    - name: saadzahid/solarsystem-mongodb-test:01  # To run separate db container for testing purpose
-      alias: mongo
-      pull_policy: always
-    variables:
-      MONGO_URI: mongodb://test-user:test-user-1@mongo:27017/solar_system
-    cache:
-      policy: pull-push
-      when: on_success
-      paths:
-        - coverage
-      key:
-        files:
-          - coverage/cobertura-coverage.xml
-        prefix: coverage
-    before_script:
-        - npm install
-    script:
-        - npm run coverage  # Running Code Coverage Test Cases
+# code_coverage:
+#     tags:
+#       - "linux_ubuntu_docker"
+#     stage: test
+#     image: node:18-alpine3.14
+#     services:
+#     - name: saadzahid/solarsystem-mongodb-test:01  # To run separate db container for testing purpose
+#       alias: mongo
+#       pull_policy: always
+#     variables:
+#       MONGO_URI: mongodb://test-user:test-user-1@mongo:27017/solar_system
+#     cache:
+#       policy: pull-push
+#       when: on_success
+#       paths:
+#         - coverage
+#       key:
+#         files:
+#           - coverage/cobertura-coverage.xml
+#         prefix: coverage
+#     before_script:
+#         - npm install
+#     script:
+#         - npm run coverage  # Running Code Coverage Test Cases
 
-    artifacts:
-      name: "Code Coverage Test Results"
-      when: always
-      expire_in: 3 days
-      reports:
-        coverage_report:
-          coverage_format: cobertura
-          path: "coverage/cobertura-coverage.xml"
-    coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/ # Coverage Pattern to store artifacts data of nyc coverage test
-    allow_failure: true
+#     artifacts:
+#       name: "Code Coverage Test Results"
+#       when: always
+#       expire_in: 3 days
+#       reports:
+#         coverage_report:
+#           coverage_format: cobertura
+#           path: "coverage/cobertura-coverage.xml"
+#     coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/ # Coverage Pattern to store artifacts data of nyc coverage test
+#     allow_failure: true
     
-docker_build:
-  stage: containerization
-  tags:
-    - "linux_ubuntu_docker"
-  image: docker:28.2.2
-  dependencies: [] # Doesn't require any artifacts from previous jobs
-  services:
-    - docker:28.2.2-dind # Docker in Docker image
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""  # Disable TLS to simplify communication
-  script:
-    - docker info  # Optional, to debug
-    - docker build -t $DOCKER_USER/solar_system:$IMAGE_VERSION . # Building image with pipeline tag as version of image
-    - docker images $DOCKER_USER/solar_system:$IMAGE_VERSION
-    - mkdir image
-    - docker save $DOCKER_USER/solar_system:$IMAGE_VERSION > image/solar-system-image:$IMAGE_VERSION.tar
-  artifacts: # building artifacts which will be require in next docker_test job to test the image 
-    when: always
-    expire_in: 3 days
-    paths:
-      - "image" # saving artifacts in image directory 
+# docker_build:
+#   stage: containerization
+#   tags:
+#     - "linux_ubuntu_docker"
+#   image: docker:28.2.2
+#   dependencies: [] # Doesn't require any artifacts from previous jobs
+#   services:
+#     - docker:28.2.2-dind # Docker in Docker image
+#   variables:
+#     DOCKER_HOST: tcp://docker:2375
+#     DOCKER_TLS_CERTDIR: ""  # Disable TLS to simplify communication
+#   script:
+#     - docker info  # Optional, to debug
+#     - docker build -t $DOCKER_USER/solar_system:$IMAGE_VERSION . # Building image with pipeline tag as version of image
+#     - docker images $DOCKER_USER/solar_system:$IMAGE_VERSION
+#     - mkdir image
+#     - docker save $DOCKER_USER/solar_system:$IMAGE_VERSION > image/solar-system-image:$IMAGE_VERSION.tar
+#   artifacts: # building artifacts which will be require in next docker_test job to test the image 
+#     when: always
+#     expire_in: 3 days
+#     paths:
+#       - "image" # saving artifacts in image directory 
 
-docker_test:
-  stage: containerization
-  needs:
-    - docker_build
-  tags:
-    - "linux_ubuntu_docker"
-  image: docker:28.2.2
-  services:
-  - name: docker:28.2.2-dind # Docker in Docker image
-    alias: docker
-  variables:
-    DOCKER_HOST: tcp://docker:2375 # To connect to the container inside container daemon running on non TLS port 2375
-    DOCKER_TLS_CERTDIR: ""  # Disable TLS to simplify communication 
+# docker_test:
+#   stage: containerization
+#   needs:
+#     - docker_build
+#   tags:
+#     - "linux_ubuntu_docker"
+#   image: docker:28.2.2
+#   services:
+#   - name: docker:28.2.2-dind # Docker in Docker image
+#     alias: docker
+#   variables:
+#     DOCKER_HOST: tcp://docker:2375 # To connect to the container inside container daemon running on non TLS port 2375
+#     DOCKER_TLS_CERTDIR: ""  # Disable TLS to simplify communication 
   
-  script:
-    - docker load -i image/solar-system-image:$IMAGE_VERSION.tar
-    - docker run --name solar-system-app -d -p 3000:3000 $DOCKER_USER/solar_system:$IMAGE_VERSION
-    - export IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-app)
-    - echo $IP
-    - docker run alpine wget -q -O - http://$IP:3000/live | grep live
+#   script:
+#     - docker load -i image/solar-system-image:$IMAGE_VERSION.tar
+#     - docker run --name solar-system-app -d -p 3000:3000 $DOCKER_USER/solar_system:$IMAGE_VERSION
+#     - export IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' solar-system-app)
+#     - echo $IP
+#     - docker run alpine wget -q -O - http://$IP:3000/live | grep live
 
-docker_push:
-  stage: containerization
-  needs:
-    - docker_build
-    - docker_test
-  tags:
-    - "linux_ubuntu_docker"
-  image: docker:28.2.2
-  services:
-  - name: docker:28.2.2-dind # Docker in Docker image
-    alias: docker
-  variables:
-    DOCKER_HOST: tcp://docker:2375 # To connect to the container inside container daemon running on non TLS port 2375
-    DOCKER_TLS_CERTDIR: ""  # Disable TLS to simplify communication 
+# docker_push:
+#   stage: containerization
+#   needs:
+#     - docker_build
+#     - docker_test
+#   tags:
+#     - "linux_ubuntu_docker"
+#   image: docker:28.2.2
+#   services:
+#   - name: docker:28.2.2-dind # Docker in Docker image
+#     alias: docker
+#   variables:
+#     DOCKER_HOST: tcp://docker:2375 # To connect to the container inside container daemon running on non TLS port 2375
+#     DOCKER_TLS_CERTDIR: ""  # Disable TLS to simplify communication 
   
-  script:
-    - docker load -i image/solar-system-image:$IMAGE_VERSION.tar
-    - docker login --username=$DOCKER_USER --password=$DOCKER_PASSWORD
-    - docker push $DOCKER_USER/solar_system:$IMAGE_VERSION
+#   script:
+#     - docker load -i image/solar-system-image:$IMAGE_VERSION.tar
+#     - docker login --username=$DOCKER_USER --password=$DOCKER_PASSWORD
+#     - docker push $DOCKER_USER/solar_system:$IMAGE_VERSION
 
 k8s_dev_deploy:
   tags:
@@ -172,10 +173,11 @@ k8s_dev_deploy:
     - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
     - echo $INGRESS_IP
     - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --save-config --dry-run=client -o yaml | kubectl apply -f -
-    - for i in kubernetes/development/*.yaml; do envsubst < $i | kubectl apply -f -; done
+    - for i in kubernetes/development/*.yaml; do envsubst < $i ; done
     - kubectl -n $NAMESPACE get all,secret,ing
     - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
     - echo $INGRESS_URL
+    - echo $K8S_IMAGE
   # artifacts:
   #   reports:
   #     dotenv: app_ingress_url.env
