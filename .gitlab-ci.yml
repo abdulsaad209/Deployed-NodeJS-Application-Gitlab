@@ -52,6 +52,7 @@ unit_testing:
       reports:
         junit: "test-results.xml" # Filename where artifacts junit test reports will store.
 
+
 # code_coverage:
 #     tags:
 #       - "linux_ubuntu_docker"
