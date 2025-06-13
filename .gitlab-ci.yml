@@ -9,6 +9,7 @@ stages:
   - test
   - containerization
   - dev_deploy
+  - stage_deploy # To test the k8s agent cluster
 
 variables:
   #K8S_IMAGE: saadzahid/solar_system:219
@@ -195,4 +196,37 @@ k8s_dev_integration_testing:
     - echo $INGRESS_URL
     - curl -s -k https://$INGRESS_URL/live | jq -r .status | grep -i live
     - curl -s -k https://$INGRESS_URL/ready | jq -r .status | grep -i ready
+
+k8s_stage_deploy:
+  tags:
+    - linux_ubuntu_docker
+  stage: stage_deploy
+  image: alpine:3.18
+  dependencies: []
+  before_script:
+    - wget https://storage.googleapis.com/kubernetes-release/release/$(wget -q -O - https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/bin/kubectl
+    - kubectl version --client
+    - apk add --no-cache gettext
+    - envsubst -V
+    
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context devops-group/nodejs-application:bearmetal-gitlab-agent
+    - kubectl get pod -A
+    - kubectl get nodes -o wide
+    - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+    - echo $INGRESS_IP
+    - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --save-config --dry-run=client -o yaml | kubectl apply -f -
+    - for i in kubernetes/development/*.yaml; do envsubst < $i | kubectl apply -f -; done
+    - kubectl -n $NAMESPACE get all,secret,ing
+    - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
+
+  artifacts:
+    reports:
+      dotenv: app_ingress_url.env
+  environment:
+    name: development
+    url: https://$INGRESS_URL
 
