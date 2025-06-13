@@ -15,6 +15,8 @@ variables:
   K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
   DOCKER_USER: $DOCKER_USERNAME
   IMAGE_VERSION: $CI_PIPELINE_ID
+  TEST_DB: $TEST_DB_IMAGE
+  TEST_URI: $TEST_DB_URI
 
 unit_testing:
     tags:
@@ -22,11 +24,11 @@ unit_testing:
     stage: Testing
     image: node:18-alpine3.14
     services:
-    - name: $TEST_DB_IMAGE  # To run separate db container for testing purpose
+    - name: $TEST_DB  # To run separate db container for testing purpose
       alias: mongo
       pull_policy: always
     variables:
-      MONGO_URI: $TEST_DB_URI 
+      MONGO_URI: $TEST_URI 
     before_script:
         - npm install # Installing required dependencies
     script:
@@ -56,11 +58,11 @@ code_coverage:
     stage: Testing
     image: node:18-alpine3.14
     services:
-    - name: $TEST_DB_IMAGE  # To run separate db container for testing purpose
+    - name: $TEST_DB  # To run separate db container for testing purpose
       alias: mongo
       pull_policy: always
     variables:
-      MONGO_URI: $TEST_DB_URI
+      MONGO_URI: $TEST_URI
     cache:
       policy: pull-push
       when: on_success
