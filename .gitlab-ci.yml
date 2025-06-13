@@ -193,6 +193,7 @@ k8s_dev_integration_testing:
     - apk add --no-cache curl
     - apk add --no-cache jq #jq is used to grep text specifically from json text
   script:
+    - echo $INGRESS_URL
     - curl -s -k https://$INGRESS_URL/live | jq -r .status | grep -i live
     - curl -s -k https://$INGRESS_URL/ready | jq -r .status | grep -i ready
 
