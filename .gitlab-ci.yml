@@ -15,7 +15,7 @@ variables:
   K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
   DOCKER_USER: $DOCKER_USERNAME
   IMAGE_VERSION: $CI_PIPELINE_ID
-  MONGO_URI: mongodb://superuser:$PASSWORD@192.168.100.47:27017/solar_system
+  #MONGO_URI: mongodb://superuser:$PASSWORD@192.168.100.47:27017/solar_system
 
 
 unit_testing:
