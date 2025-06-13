@@ -196,4 +196,3 @@ k8s_dev_integration_testing:
     - curl -s -k https://$INGRESS_URL/live | jq -r .status | grep -i live
     - curl -s -k https://$INGRESS_URL/ready | jq -r .status | grep -i ready
 
-
