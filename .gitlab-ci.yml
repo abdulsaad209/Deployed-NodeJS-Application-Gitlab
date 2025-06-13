@@ -167,12 +167,12 @@ k8s_dev_deploy:
     - export KUBECONFIG="$DEV_KUBE_CONFIG"
     - kubectl version -o yaml
     - kubectl get nodes
-    - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
-    - echo $INGRESS_IP
-    # - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --save-config --dry-run=client -o yaml | kubectl apply -f -
-    - for i in kubernetes/development/*.yaml; do envsubst < $i | kubectl apply -f -; done
-    # - kubectl -n $NAMESPACE get all,secret,ing
-    # - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
+  #   - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+  #   - echo $INGRESS_IP
+  #   - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --save-config --dry-run=client -o yaml | kubectl apply -f -
+  #   - for i in kubernetes/development/*.yaml; do envsubst < $i | kubectl apply -f -; done
+  #   - kubectl -n $NAMESPACE get all,secret,ing
+  #   - echo "INGRESS_URL=$(kubectl -n $NAMESPACE get ing -o jsonpath="{.items[0].spec.tls[0].hosts[0]}")" >> app_ingress_url.env
   # artifacts:
   #   reports:
   #     dotenv: app_ingress_url.env
