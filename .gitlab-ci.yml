@@ -17,6 +17,7 @@ variables:
   IMAGE_VERSION: $CI_PIPELINE_ID
   MONGO_URI: mongodb://superuser:$PASSWORD@192.168.100.47:27017/solar_system
 
+
 unit_testing:
     tags:
       - "linux_ubuntu_docker"
