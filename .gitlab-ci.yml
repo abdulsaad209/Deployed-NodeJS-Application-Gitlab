@@ -168,7 +168,7 @@ k8s_dev_deploy:
   script:
     - export KUBECONFIG="$DEV_KUBE_CONFIG"
     - kubectl version -o yaml
-    - kubectl get nodes
+    - kubectl get nodes -o wide
     - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
     - echo $INGRESS_IP
     - kubectl -n $NAMESPACE create secret generic mongo-db-creds --from-literal=MONGO_URI=$MONGO_URI --save-config --dry-run=client -o yaml | kubectl apply -f -
@@ -183,4 +183,5 @@ k8s_dev_deploy:
   # environment:
   #   name: development
   #   url: https://$INGRESS_URL
+
 
