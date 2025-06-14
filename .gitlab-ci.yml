@@ -11,12 +11,10 @@ stages:
   - dev_deploy
 
 variables:
-  #K8S_IMAGE: saadzahid/solar_system:219
   K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
   DOCKER_USER: $DOCKER_USERNAME
   IMAGE_VERSION: $CI_PIPELINE_ID
-  MONGO_URI: $MAIN_MONGO_URI
-
+  MONGO_URI: mongodb://superuser:$PASSWORD@192.168.100.47:27017/solar_system
 
 unit_testing:
     tags:
@@ -24,7 +22,7 @@ unit_testing:
     stage: test
     image: node:18-alpine3.14
     services:
-    - name: saadzahid/solarsystem-mongodb-test:01  # To run separate db container for testing purpose
+    - name: saadzahid/solarsystem-mongodb-test:05  # To run separate db container for testing purpose
       alias: mongo
       pull_policy: always
     variables:
@@ -32,7 +30,7 @@ unit_testing:
     before_script:
         - npm install # Installing required dependencies
     script:
-        - npm test  # Testing the code 
+        - npm test  # Testing the code
     cache:
       policy: pull-push
       when: on_success
@@ -58,7 +56,7 @@ code_coverage:
     stage: test
     image: node:18-alpine3.14
     services:
-    - name: saadzahid/solarsystem-mongodb-test:01  # To run separate db container for testing purpose
+    - name: saadzahid/solarsystem-mongodb-test:05  # To run separate db container for testing purpose
       alias: mongo
       pull_policy: always
     variables:
@@ -165,7 +163,7 @@ k8s_dev_deploy:
     - kubectl version --client
     - apk add --no-cache gettext
     - envsubst -V
-    
+
   script:
     - export KUBECONFIG="$DEV_KUBE_CONFIG"
     - kubectl version -o yaml
