@@ -11,7 +11,6 @@ stages:
   - dev_deploy
 
 variables:
-  #K8S_IMAGE: saadzahid/solar_system:219
   K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
   DOCKER_USER: $DOCKER_USERNAME
   IMAGE_VERSION: $CI_PIPELINE_ID
@@ -147,6 +146,8 @@ k8s_dev_deploy:
   tags:
     - linux_ubuntu_docker
   stage: dev_deploy
+  needs:
+    - docker_push
   image: alpine:3.18
   dependencies: []
   before_script:
