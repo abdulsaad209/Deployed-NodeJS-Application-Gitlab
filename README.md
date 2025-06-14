@@ -1,3 +1,8 @@
+![image](https://github.com/user-attachments/assets/2327e1a9-cbe2-499a-9e5d-ce69357056e0)
+
+![image](https://github.com/user-attachments/assets/a73dd468-c101-469e-a991-3e80c775ef44)
+
+
 # Solar System NodeJS Application
 
 A simple HTML+MongoDB+NodeJS project to display Solar System and it's planets..
