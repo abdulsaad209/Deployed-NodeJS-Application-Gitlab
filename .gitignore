@@ -5,3 +5,4 @@ solar-system.png
 coverage
 test-results.xml
 .env
+init-mongo.js
