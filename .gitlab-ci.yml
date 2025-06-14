@@ -166,7 +166,9 @@ k8s_dev_deploy:
     - envsubst -V
     
   script:
-    - export KUBECONFIG="$DEV_KUBE_CONFIG"
+    - kubectl config get-contexts
+    - kubectl config use-context devops-group/nodejs-application:k8s
+    - kubectl get pods
     - kubectl version -o yaml
     - kubectl get nodes -o wide
     - export INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
