@@ -1,8 +1,8 @@
 ci_access:
   projects:
-    - id: devops-group/nodejs-application
+    - id: devops-group/NodeJS-Application
 user_access:
   access_as:
     agent: {}
   projects:
-    - id: devops-group/nodejs-application
+    - id: devops-group/NodeJS-Application
