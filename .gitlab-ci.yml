@@ -166,6 +166,8 @@ k8s_dev_deploy:
     - envsubst -V
     
   script:
+    - temp_kube_config_file=$(printenv KUBECONFIG)  # builtin env variable to print kube config
+    - cat $temp_kube_config_file
     - kubectl config get-contexts
     - kubectl config use-context devops-group/nodejs-application:k8s
     - kubectl version -o yaml
