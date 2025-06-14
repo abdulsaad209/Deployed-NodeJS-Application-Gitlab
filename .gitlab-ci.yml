@@ -11,13 +11,12 @@ stages:
   - dev_deploy
 
 variables:
-  #K8S_IMAGE: saadzahid/solar_system:219
   K8S_IMAGE: $DOCKER_USER/solar_system:$IMAGE_VERSION
   DOCKER_USER: $DOCKER_USERNAME
   IMAGE_VERSION: $CI_PIPELINE_ID
   MONGO_URI: mongodb://superuser:$PASSWORD@192.168.100.47:27017/solar_system
 
-unit_testing:
+.prepare_nodejs_environment:
     tags:
       - "linux_ubuntu_docker"
     stage: test
@@ -30,6 +29,9 @@ unit_testing:
       MONGO_URI: mongodb://test-user:test-user-1@mongo:27017/solar_system
     before_script:
         - npm install # Installing required dependencies
+  
+unit_testing:
+    extends: .prepare_nodejs_environment
     script:
         - npm test  # Testing the code 
     cache:
@@ -52,16 +54,9 @@ unit_testing:
         junit: "test-results.xml" # Filename where artifacts junit test reports will store.
 
 code_coverage:
-    tags:
-      - "linux_ubuntu_docker"
-    stage: test
-    image: node:18-alpine3.14
-    services:
-    - name: saadzahid/solarsystem-mongodb-test:01  # To run separate db container for testing purpose
-      alias: mongo
-      pull_policy: always
-    variables:
-      MONGO_URI: mongodb://test-user:test-user-1@mongo:27017/solar_system
+    extends: .prepare_nodejs_environment
+    script:
+        - npm run coverage  # Running Code Coverage Test Cases
     cache:
       policy: pull-push
       when: on_success
@@ -71,10 +66,6 @@ code_coverage:
         files:
           - coverage/cobertura-coverage.xml
         prefix: coverage
-    before_script:
-        - npm install
-    script:
-        - npm run coverage  # Running Code Coverage Test Cases
 
     artifacts:
       name: "Code Coverage Test Results"
@@ -155,6 +146,8 @@ k8s_dev_deploy:
   tags:
     - linux_ubuntu_docker
   stage: dev_deploy
+  needs:
+    - docker_push
   image: alpine:3.18
   dependencies: []
   before_script:
