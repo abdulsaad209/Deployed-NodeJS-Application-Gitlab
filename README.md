@@ -96,3 +96,10 @@ node seed.js
 npm start 
 
 * Now run Gitlab CICD and access the application on the mentioned $INGRESS_URL in the cicd output
+
+* Set Variable Values in GitHub secrets OR GitLab CICD Variables
+DEV_KUBE_CONFIG="Your k8s cluster config ~/.kube/config"
+DOCKER_PASSWORD="DockerHub Password"
+DOCKER_USERNAME="DockerHub_Username"
+NAMESPACE="Your name space in k8s cluster where you will deploy application"
+REPLICAS="Amount of Replicas you wanna create i used 2 for this project"
