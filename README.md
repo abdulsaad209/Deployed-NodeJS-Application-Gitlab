@@ -108,3 +108,6 @@ DOCKER_PASSWORD="DockerHub Password"
 DOCKER_USERNAME="DockerHub_Username"
 NAMESPACE="Your name space in k8s cluster where you will deploy application"
 REPLICAS="Amount of Replicas you wanna create i used 2 for this project"
+
+## Deploy Application with GitLab Auto-DevOps Feature
+[Deploy NodeJS Application using GitLab Auto-DevOps CICD](https://github.com/abdulsaad209/Auto-DevOps-NodeJS-Application-Gitlab)
