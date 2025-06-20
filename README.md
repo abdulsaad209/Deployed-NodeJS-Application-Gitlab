@@ -1,3 +1,6 @@
+## Deploy Application with GitLab Auto-DevOps Feature
+[Deploy NodeJS Application using GitLab Auto-DevOps CICD](https://github.com/abdulsaad209/Auto-DevOps-NodeJS-Application-Gitlab)
+
 ![image](https://github.com/user-attachments/assets/2327e1a9-cbe2-499a-9e5d-ce69357056e0)
 
 ![image](https://github.com/user-attachments/assets/a73dd468-c101-469e-a991-3e80c775ef44)
@@ -109,5 +112,3 @@ DOCKER_USERNAME="DockerHub_Username"
 NAMESPACE="Your name space in k8s cluster where you will deploy application"
 REPLICAS="Amount of Replicas you wanna create i used 2 for this project"
 
-## Deploy Application with GitLab Auto-DevOps Feature
-[Deploy NodeJS Application using GitLab Auto-DevOps CICD](https://github.com/abdulsaad209/Auto-DevOps-NodeJS-Application-Gitlab)
